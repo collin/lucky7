@@ -1,8 +1,9 @@
-#### Welcome to Lucky7 %%%
 ## Collin Miller claims authorship!  $$$
 ##### MIT license for all Earthlings *** 
 #### http://www.opensource.org/licenses/mit-license.php ^^^
 ## Martians and Moonlings pay extra ##
+
+#### Welcome to Lucky7 %%%
 
 Place your bets: Increased odds on outside scrambles.
 
@@ -12,3 +13,53 @@ Try out the specs:
 The prettier version:
 >> rake spec:doc
 
+What are all the bits?
+
+Some come from the outside world:
+  jsspec    - http://jania.pe.kr/aw/moin.cgi/JSSpec
+  orbited   - http://orbited.org
+  haml/sass - http://haml.hamptoncatlin.com 
+
+We have a little abstraction, Fold, to do preprocessing.
+  Haml and Sass inspired Fold. Poorer in features though.
+
+Jabs(javascript abstract behavior syntax)        and
+Jass(javascript abstract spec syntax)    follow the Fold.
+
+One might have such a file:
+# somespec.html.jass
+describe Object
+  it has a prototype
+    expects(Object).should_have('prototype');
+
+Jass generates
+  describe("Object", {
+    "has a prototype": function() {
+      expects(Object.should_hav('prototype');
+    }
+  });
+
+Jass even wraps it in the needed HTML boilerplate for jsspec.
+
+Open up in a browser:
+  /lucky7/vendor/js_spec/example.spec.html <-- Jass generated this one.
+  /lucky7/vendor/js_spec/demo.html         <-- This one comes with jsspec
+
+Jabs remains more mysterious. Jabs wants to have a nice little MVC
+pattern shared between Client and Server code.
+
+Only write your validations in one place, Only specify your models once.
+
+That sort of thing. And a little bit more. Lucky7 reccomends knowing
+Javascript and Ruby fairly well.
+
+Oh wait, before we go on to write more code! Let's have something about...
+
+Lucky7::Builder
+
+Luck7 has a continuous builder. It watches your file system for changes and
+rebuilds your project as you go. At rebuild time tests can be run. Other things
+might happen as well.
+
+Well, there is more about that later. I didn't even explain why Orbited
+is right there in the vendor folder. More on that later.
