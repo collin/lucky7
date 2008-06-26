@@ -1,0 +1,180 @@
+describe Foo (base)
+  it before
+    target = {sayFoo: function() {return "foo";}};
+  
+  it should say 'foo'
+    value_of(target.sayFoo()).should_be("foo");
+
+describe Boo (derived)
+  it before
+    target = {};
+    target['sayFoo'] = function() {return "foo";};
+    target['sayBar'] = function() {return "bar";};
+  
+  it should also say 'bar'
+    value_of(target.sayBar()).should_be("bar");
+
+
+describe Plus operator (just for example)
+  it should concatenate two strings
+    value_of("Hello " + "World").should_be("Hello World");
+  
+  it should add two numbers
+    value_of(1 + 2).should_be(3);
+
+describe Should match's
+  it Should match
+    value_of("Hello").should_match(/ell/);
+
+  it Should match 1
+    value_of("Hello").should_match(/x/);
+  
+  it Should match 2
+    value_of([1,2,3]).should_match(/x/);
+  
+  it Should not match 1
+    value_of("Hello").should_not_match(/ell/);
+  
+  it Should not match 2
+    value_of([1,2,3]).should_not_match(/x/);
+
+
+describe Should includes
+  it Should include
+    value_of([1,2,3]).should_include(4);
+  
+  it Should not include
+    value_of([1,2,3]).should_not_include(2);
+  
+  it Should include / Non-array object
+    value_of(new Date()).should_include(4);
+  
+  it Should not include / Non-array object
+    value_of(new Date()).should_not_include('getMonth');
+  
+  it Should include 2
+    value_of({a:1, b:2}).should_not_include('a');
+
+describe Should have's
+  it String length
+    value_of("Hello").should_have(4, "characters");
+  
+  it Array length
+    value_of([1,2,3]).should_have(4, "items");
+  
+  it Object\'s item length
+    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(3, "accounts");
+  
+  it No match
+    value_of("This is a string").should_have(5, "players");
+   
+  it Exactly
+    value_of([1,2,3]).should_have_exactly(2, "items");
+
+  it At least
+    value_of([1,2,3]).should_have_at_least(4, "items");
+  
+  it At most
+    value_of([1,2,3]).should_have_at_most(2, "items");
+  
+  it Member
+    value_of({x: 0}).should_have_member('x');
+    value_of({x: 0}).should_have_member('y');
+
+describe Should be empty's
+  it String
+    value_of("Hello").should_be_empty();
+  
+  it Array
+    value_of([1,2,3]).should_be_empty();
+  
+  it Object\'s item
+    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(0, "accounts");
+
+describe Failure messages
+  it Should be (String)
+    value_of("Hello World").should_be("Good-bye world");
+
+  it Should have (Object\s item)
+    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(3, "accounts");
+
+  it Should have at least
+    value_of([1,2,3]).should_have_at_least(4, "items");
+
+  it Should include
+    value_of([1,2,3]).should_include(4);
+
+  it Should match
+    value_of("Hello").should_match(/bye/);
+
+describe Should be's
+  it String mismatch
+    value_of("Hello world").should_be("Good-bye world");
+
+  it Array item mismatch
+    value_of(['ab','cd','ef']).should_be(['ab','bd','ef']);
+
+  it Array length mismatch
+    value_of(['a',2,'4',5]).should_be([1,2,[4,5,6],6,7]);
+
+  it Undefined value
+    value_of("Test").should_be(undefined);
+
+  it Null value
+    value_of(null).should_be("Test");
+
+  it Boolean value 1
+    value_of(true).should_be(false);
+
+  it Boolean value 2
+    value_of(false).should_be_true();
+
+  it Boolean value 3
+    value_of(true).should_be_false();
+
+  it Number mismatch
+    value_of(1+2).should_be(4);
+
+  it Date mismatch
+    value_of(new Date(1979, 3, 27)).should_be(new Date(1976, 7, 23));
+
+  it Object mismatch 1
+    var actual = {a:1, b:2};
+    var expected = {a:1, b:2, d:3};
+    
+    value_of(actual).should_be(expected);
+
+  it Object mismatch 2
+    var actual = {a:1, b:2, c:3, d:4};
+    var expected = {a:1, b:2, c:3};
+    
+    value_of(actual).should_be(expected);
+
+  it Object mismatch 3
+    var actual = {a:1, b:4, c:3};
+    var expected = {a:1, b:2, c:3};
+    
+    value_of(actual).should_be(expected);
+
+  it null should be null
+    value_of(null).should_be(null);
+
+  it null should not be undefined
+    value_of(null).should_be(undefined);
+
+  it null should not be null
+    value_of(null).should_not_be(null);
+
+  it empty array 1
+    value_of([]).should_be_empty();
+    value_of([1]).should_be_empty();
+
+  it empty array 2
+    value_of([1]).should_not_be_empty();
+    value_of([]).should_not_be_empty();
+
+describe Equality operator
+  it should work for different Date instances which have same value
+    var date1 = new Date(1979, 03, 27);
+    var date2 = new Date(1979, 03, 27);
+    value_of(date1).should_be(date2);
