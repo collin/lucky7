@@ -1,0 +1,9 @@
+
+event-0.3:
+
+- fix reference counting for callback arguments passed via
+  "simple" interface
+
+- fix self decref for persistent signal event
+
+# $Id: CHANGES,v 1.1 2005/09/12 03:03:36 dugsong Exp $
