@@ -1,0 +1,14 @@
+#### Welcome to Lucky7 %%%
+## Collin Miller claims authorship!  $$$
+##### MIT license for all Earthlings *** 
+#### http://www.opensource.org/licenses/mit-license.php ^^^
+## Martians and Moonlings pay extra ##
+
+Place your bets: Increased odds on outside scrambles.
+
+Try out the specs:
+>> rake spec:all
+
+The prettier version:
+>> rake spec:doc
+
