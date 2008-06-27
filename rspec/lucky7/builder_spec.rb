@@ -154,9 +154,8 @@ describe Builder, ".build_spec" do
 end
 
 def modify_file! file="#{Builder::Lucky7Root}/src/app/layout.html.haml"
-  stamp = (File.mtime(file) + 5000).strftime "%m%d%H%m"
-  command = "touch #{file} -m -t #{stamp}"
-  system command
+  stamp = File.mtime(file) + 5000
+  command = File.utime(stamp, stamp, file)
 end
 
 describe modify_file! do
