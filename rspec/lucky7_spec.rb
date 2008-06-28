@@ -12,4 +12,8 @@ describe Lucky7 do
   it "has a Renders Module" do
     Lucky7.constants.should include("Renders")
   end
+
+  it "has a Generator Module" do
+    Lucky7.constants.should include("Generator")
+  end
 end
