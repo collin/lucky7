@@ -4,6 +4,6 @@ require 'facets'
 require 'basis'
 
 require 'lib/lucky7'
-require 'lib/fold'
+require 'fold'
 require 'lib/jabs'
 require 'lib/jass'
