@@ -1,4 +1,4 @@
-basis_gemspec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name             = "lucky7"
   s.version          = "0.0.1"
   s.platform         = Gem::Platform::RUBY
