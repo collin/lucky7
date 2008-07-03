@@ -33,16 +33,16 @@ describe Object
     expects(Object).should_have('prototype');
 
 Jass generates
-  describe("Object", {
-    "has a prototype": function() {
-      expects(Object.should_hav('prototype');
-    }
-  });
+describe("Object", {
+  "has a prototype": function() {
+    expects(Object.should_hav('prototype');
+  }
+});
 
 Jass even wraps it in the needed HTML boilerplate for jsspec.
 
 Open up in a browser:
-  /lucky7/vendor/js_spec/example.spec.html <-- Jass generated this one.
+  /lucky7/vendor/js_spec/example.html <-- Jass generated this one.
   /lucky7/vendor/js_spec/demo.html         <-- This one comes with jsspec
 
 Jabs remains more mysterious. Jabs wants to have a nice little MVC
