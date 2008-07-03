@@ -3,12 +3,8 @@ require 'rspec/lucky7_spec_helper'
 include Lucky7
     
 Builder.const_set :Lucky7Root, FixtureRoot
+FixtureRegex = /fixture/
 
-HamlRegex= /html\.haml/
-SassRegex= /css\.sass/
-JabsRegex= /\.js/
-SpecRegex= /html\.jass/
-FixtureRegex= /fixtures/
 
 def modify_file! file="#{Builder::Lucky7Root}/src/app/layout.html.haml"
   stamp = File.mtime(file) + 5000
@@ -35,69 +31,77 @@ describe Builder do
     end
   end
 
-  before(:each) {@builder = Builder.new}
+  class HamlBuilder < Builder
+    builds Haml, 
+      :files   => "#{Builder::Lucky7Root}/**/*.haml",
+      :context => Lucky7::Renders
+  end
+
+  before(:each) {@builder = HamlBuilder.new}
+
+  describe '.inherited' do
+    it "sets Builders constant" do
+      Klass = Class.new Builder
+      Klass::Builders.should be_empty
+    end
+  end
+
+  describe '.builds' do
+    it "adds to Builders" do
+      FauxBuilder = Class.new Builder
+      FauxBuilder.builds Haml
+      FauxBuilder::Builders.should_not be_empty
+    end
+  end
 
   describe "#build" do
     before(:each) do
       @builder.cache_mtimes!
     end
-  
-    it "builds spec files" do
-      @builder.should_receive(:build_spec).once
-      @builder.build
-    end
-  
-    it "builds haml files" do
-      @builder.should_receive(:build_haml).once
-      @builder.build
-    end
-    
-    it "builds sass files" do
-      @builder.should_receive(:build_sass).once
-      @builder.build
-    end
-    
-    it "builds jabs files" do
-      @builder.should_receive(:build_jabs).once
-      @builder.build
-    end
-    
+   
     it "packs" do
       @builder.should_receive(:pack).once
       @builder.build
     end
   end
 
+  describe "#build_files" do
+    before(:each) do
+      @builder.cache_mtimes!
+    end
+
+    it "renders html documents" do
+      src= Dir.glob "#{Builder::Lucky7Root}/src/app/*.html.haml"
+      build_glob= "#{Builder::Lucky7Root}/build/app/*.html"
+      build= Dir.glob build_glob
+      FileUtils.rm build, :force => true
+
+      @builder.build_files(@builder.files[:Haml], :Haml, {:context => Lucky7::Renders})
+      Dir.glob(build_glob).length.should == src.length
+    end
+  end
+
   describe "#build_path_for" do  
     it "constructs a build path" do
-      @builder.build_path_for(:extension, "#{Lucky7Root}/src/some_file.extension_.processor").should == "#{Lucky7Root}/build/some_file.extension"
+      @builder.build_path_for("#{Lucky7Root}/src/some_file.extension.processor").should == "#{Lucky7Root}/build/some_file.extension"
     end
     
     it "maintains path depth" do
-      @builder.build_path_for(:extension, "#{Lucky7Root}/src/place/some_file.extension_.processor").should == "#{Lucky7Root}/build/place/some_file.extension"
+      @builder.build_path_for("#{Lucky7Root}/src/place/some_file.extension.processor").should == "#{Lucky7Root}/build/place/some_file.extension"
     end
-    
+
+=begin
+Not using this, removed it when builder became Class    
     it "builds multi dot files" do
       @builder.build_path_for("spec.html", "#{Lucky7Root}/src/place/some_file.extension.processor").should == "#{Lucky7Root}/build/place/some_file.spec.html"
     end
+=end
   end
 
   describe "#files" do
     it "contains haml files" do
-      @builder.files[:haml].should_not be_empty
-    end
-    
-    it "contains jabs files" do
-      @builder.files[:jabs].should_not be_empty
-    end
-    
-    it "contains sass files" do
-      @builder.files[:sass].should_not be_empty
-    end
-    
-    it "contains spec files" do
-      @builder.files[:spec].should_not be_empty
-    end
+      @builder.files[:Haml].should_not be_empty
+    end    
   end
   
   describe "#files_flattened" do
@@ -124,54 +128,6 @@ describe Builder do
       @builder.mtimes.reject{|key, value| value.is_a? Time}.should be_empty
     end
   end
-
-  describe "#build_haml" do
-    before(:each) do
-      @src= Dir.glob "#{Builder::Lucky7Root}/src/app/*.html.haml"
-      @build_glob= "#{Builder::Lucky7Root}/build/app/*.html"
-      build= Dir.glob @build_glob
-      FileUtils.rm build, :force => true
-    end
-    
-    it "renders html documents" do
-      @builder.build_haml(@src)
-      Dir.glob(@build_glob).length.should == @src.length  
-    end
-  end
-  
-  describe "#build_sass" do
-    before(:each) do
-      @src= Dir.glob "#{Builder::Lucky7Root}/src/app/*.css.sass"
-      @build_glob= "#{Builder::Lucky7Root}/build/app/*.css"
-      build= Dir.glob @build_glob
-      FileUtils.rm build, :force => true
-    end
-    
-    it "renders css files" do
-      @builder.build_sass(@src)
-      Dir.glob(@build_glob).length.should == @src.length  
-    end
-  end
-  
-  describe "#build_spec" do
-    before(:each) do
-      @src= Dir.glob "#{Builder::Lucky7Root}/src/app/*.spec.yaml"
-      @build_glob= "#{Builder::Lucky7Root}/build/app/*.spec.html"
-      build= Dir.glob @build_glob
-      FileUtils.rm build, :force => true
-    end
-    
-    it "renders jsspec files" do
-      @builder.build_spec(@src)
-      Dir.glob(@build_glob).length.should == @src.length  
-    end
-  end
-  
-  describe "#haml_render_context" do
-    it "is Lucky7::Renders" do
-      @builder.haml_render_context.should == Lucky7::Renders
-    end
-  end
   
   describe "#modified_files" do
     before(:each) do
@@ -184,17 +140,17 @@ describe Builder do
   
     it "contains modified files names" do
       modify_file!
-      @builder.modified_files[:haml].should_not be_empty
+      @builder.modified_files[:Haml].should_not be_empty
     end
   
     it "ignores unmodified files" do
-      @builder.modified_files[:haml].should be_empty
+      @builder.modified_files[:Haml].should be_empty
     end
   
     it "contains new files" do
-      file = "#{Builder::Lucky7Root}/src/app/touche.js.jabs"
+      file = "#{Builder::Lucky7Root}/src/app/touched.html.haml"
       FileUtils.touch(file)
-      @builder.modified_files[:jabs].should include(file)
+      @builder.modified_files[:Haml].should include(file)
       FileUtils.rm(file)
     end
   end
@@ -227,6 +183,7 @@ describe Builder do
   
   describe "#ensure_build_path!" do
     it "makes all parent dirs" do
+      FileUtils.rm_rf "#{Builder::Lucky7Root}/build"
       @builder.ensure_build_path! "#{Builder::Lucky7Root}/build/app/layout.html.haml"
       File.exists?("#{Builder::Lucky7Root}/build/app/").should == true
       FileUtils.rm_rf "#{Builder::Lucky7Root}/build/app"
@@ -243,70 +200,6 @@ describe Builder do
       @builder.should_receive(:build).once
       @builder.build_continuously false
     end
-  end
-  
-  describe "#haml_glob" do
-    it "globs haml files" do
-      Dir.glob(@builder.haml_glob).should_not be_empty
-    end
-    
-    it "globs only haml files" do
-      Dir.glob(@builder.haml_glob).reject{|file| file.match HamlRegex}.should be_empty
-    end
-  end
-  
-  describe "#sass_glob" do
-    it "globs sass files" do
-      Dir.glob(@builder.sass_glob).should_not be_empty
-    end
-    
-    it "globs only sass files" do
-      Dir.glob(@builder.sass_glob).reject{|file| file.match SassRegex}.should be_empty
-    end
-  end
-  
-  describe "jabs_glob" do
-    it "globs jabs files" do
-      Dir.glob(@builder.jabs_glob).should_not be_empty
-    end
-    
-    it "globs only jabs files" do
-      Dir.glob(@builder.jabs_glob).reject{|file| file.match JabsRegex}.should be_empty
-    end
-  end
-  
-  describe "spec_glob" do
-    it "globs spec files" do
-      Dir.glob(@builder.spec_glob).should_not be_empty
-    end
-    
-    it "globs only spec files" do
-      Dir.glob(@builder.spec_glob).reject{|file| file.match SpecRegex}.should be_empty
-    end
-  end
-end
-  
-describe HamlRegex do
-  it "matches haml file names" do
-    HamlRegex.match("template.html.haml").should_not == nil
-  end
-end
-
-describe SassRegex do
-  it "matches sass file names" do
-    SassRegex.match("stylesheet.css.sass").should_not == nil
-  end
-end
-
-describe JabsRegex do
-  it "matches jabs file names" do
-    JabsRegex.match("demandlet.js.jabs").should_not == nil
-  end
-end
-
-describe SpecRegex do
-  it "matches spec file names" do
-    SpecRegex.match("demandlet.html.jass").should_not == nil
   end
 end
 

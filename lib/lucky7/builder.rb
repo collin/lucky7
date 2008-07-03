@@ -5,28 +5,26 @@ module Lucky7
   class Builder
     SrcRegex=  /src/
     BuildDirectory= "build"
-    def haml_glob
-      "#{Lucky7Root}/**/*.html.haml"
-    end
+    DefaultOptions= {
+      :files   => "!no_match",
+      :context => Object
+    }
 
-    def sass_glob
-      "#{Lucky7Root}/**/*.css.sass"
-    end
+    class << self
+      def inherited klass
+        klass.const_set :Builders, {}
+      end
 
-    def jabs_glob
-      "#{Lucky7Root}/**/*.js.jabs"
-    end
-    
-    def spec_glob
-      "#{Lucky7Root}/**/*.html.jass"
+      def builds builder_module=Module, options={}
+        options.merge DefaultOptions
+        self::Builders[builder_module.name.to_sym] = options
+      end
     end
 
     def files
-      {:haml=>haml_glob, 
-      :sass=>sass_glob,
-      :jabs=>jabs_glob,
-      :spec=>spec_glob}.inject({}) do |hash, pair|
-        hash[pair.first]= Dir.glob(pair.last)
+      self.class::Builders.inject({}) do |hash, builder|
+        module_name = builder.first
+        hash[module_name] = Dir.glob builder.last[:files]
         hash
       end
     end
@@ -68,70 +66,43 @@ module Lucky7
     end
     
     def build
-      m = modified_files
+      m= modified_files
+      self.class::Builders.each do |module_name, options|
+        build_files m[module_name], module_name, options
+      end
 
-      build_sass m[:sass]
-      build_haml m[:haml]
-      build_jabs m[:jabs]
-      build_spec m[:spec]
       pack
     end
 
-    def haml_render_context
-      Lucky7::Renders
-    end
-    
-    def build_haml paths
-      paths.each do |path|
-        file= File.new build_path_for(:html, path), 'w'
-        haml= File.read(path)
-        en= Haml::Engine.new(haml)
-        html= en.render haml_render_context
-        file.write(html)
+    def build_files paths, module_name, options
+      builder = Object.const_get(module_name)
+      for path in paths
+        file = File.new build_path_for(path), 'w'
+
+        src = File.read(path)
+        engine = builder::Engine.new(src)
+
+        rendered = engine.render options[:context]
+        file.write(rendered)
         file.close
       end
     end
-    
-    def build_sass paths
-      paths.each do |path|
-        file= File.new build_path_for(:css, path), 'w'
-        sass= File.read(path)
-        en= Sass::Engine.new(sass)
-        css= en.render
-        file.write(css)
-        file.close
-      end        
-    end
-    
-    def build_spec paths
-      paths.each do |path|
-        file= File.new build_path_for('spec.html', path), 'w'
-        jass= File.read(path)
-        en= Jass::Engine.new(jass)
-        js_spec= en.render
-        file.write js_spec
-        file.close 
-      end
-    end
-    
-    def build_jabs files
-      
-    end
-    
+
     def pack
-      
+
     end
     
     def ensure_build_path! path
-      FileUtils.mkdir_p File.dirname(path)
+      FileUtils.mkdir_p path
     end
     
-    def build_path_for extension, src_path
-      path= File.dirname(src_path).gsub(SrcRegex, BuildDirectory)
-      src_path= src_path.split('.').first
-      path+= "/#{File.basename(src_path)}.#{extension}"
-      ensure_build_path! path
-      path
+    def build_path_for src_path
+      dir= File.dirname(src_path).gsub(SrcRegex, BuildDirectory)
+      bits= File.basename(src_path).split('.')
+      name= bits.reject{|bit|bit == bits.last}.join('.')
+
+      ensure_build_path! dir
+      "#{dir}/#{name}"
     end
   end
 end

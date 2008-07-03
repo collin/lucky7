@@ -49,6 +49,11 @@ task :install => :environment do
     sudo python setup.py install;
   }
 end
+
+task :cleanup do 
+  Dir.glob("**/*.*~")+Dir.glob("**/*~").each{|swap|FileUtils.rm(swap, :force => true)}
+end
+
 namespace :gem do
   task :spec do
     file = File.new("#{__DIR__}/lucky7.gemspec", 'w+')
