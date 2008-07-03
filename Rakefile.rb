@@ -28,7 +28,14 @@ namespace :spec do
   
   namespace :js do
     task :example => :environment do
-      Lucky7::Builder.build_spec ["#{Lucky7Root}/lib/jsspec/example.html.jass"]
+      class JsSpecExampleBuilder < Lucky7::Builder
+        SrcRegex= Regexp.new "lib/jsspec"
+        BuildDirectory= "vendor/js_spec"
+
+        builds Jass,
+          :files => "#{Lucky7Root}/lib/jsspec/example.html.jass"
+      end
+      JsSpecExampleBuilder.new.build_all
     end
 
     task :build => :environment do

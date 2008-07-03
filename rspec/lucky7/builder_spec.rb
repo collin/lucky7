@@ -65,6 +65,17 @@ describe Builder do
     end
   end
 
+  describe "#build_all" do
+    it "builds all unmodified files" do
+      src= Dir.glob "#{Builder::Lucky7Root}/src/app/*.html.haml"
+      build_glob= "#{Builder::Lucky7Root}/build/app/*.html"
+      build= Dir.glob build_glob
+      FileUtils.rm build, :force => true
+      @builder.build_all
+      Dir.glob(build_glob).length.should == src.length
+    end
+  end
+
   describe "#build_files" do
     before(:each) do
       @builder.cache_mtimes!

@@ -16,7 +16,7 @@ module Lucky7
       end
 
       def builds builder_module=Module, options={}
-        options.merge DefaultOptions
+        options = DefaultOptions.merge(options)
         self::Builders[builder_module.name.to_sym] = options
       end
     end
@@ -65,14 +65,17 @@ module Lucky7
       end while loop
     end
     
-    def build
-      m= modified_files
+    def build files=modified_files
       self.class::Builders.each do |module_name, options|
-        build_files m[module_name], module_name, options
+        build_files files[module_name], module_name, options
       end
 
       pack
     end
+
+    def build_all
+      build files
+    end    
 
     def build_files paths, module_name, options
       builder = Object.const_get(module_name)
@@ -97,7 +100,7 @@ module Lucky7
     end
     
     def build_path_for src_path
-      dir= File.dirname(src_path).gsub(SrcRegex, BuildDirectory)
+      dir= File.dirname(src_path).gsub(self.class::SrcRegex, self.class::BuildDirectory)
       bits= File.basename(src_path).split('.')
       name= bits.reject{|bit|bit == bits.last}.join('.')
 

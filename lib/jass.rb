@@ -16,7 +16,7 @@ module Jass
   class Engine < Fold::Engine
     Layout= Haml::Engine.new File.read("#{Lucky7Root}/lib/jsspec/layout.html.haml")
     
-    def render
+    def render context=nil
       Layout.render Object.new, {:test=>super}    
     end
   end
