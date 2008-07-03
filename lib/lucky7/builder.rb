@@ -1,5 +1,6 @@
 require 'haml'
 require 'sass'
+require 'pp'
 
 module Lucky7
   class Builder
@@ -88,6 +89,8 @@ module Lucky7
         rendered = engine.render options[:context]
         file.write(rendered)
         file.close
+
+        pp file.path
       end
     end
 

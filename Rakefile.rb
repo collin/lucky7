@@ -2,6 +2,7 @@ __DIR__ = path = File.dirname(__FILE__)
 
 require 'rubygems'
 require 'spec'
+require 'launchy'
 
 desc "Watch files for changes and rebuild on the fly."
 task :build => :environment do
@@ -25,7 +26,13 @@ namespace :spec do
   task :doc => :prepare do
     system "spec #{@specs} --format specdoc"
   end
-  
+
+
+  task :build => :environment do
+    require 'tools/spec_builder'
+    Lucky7::SpecBuilder.new.build_continuously
+  end  
+
   namespace :js do
     task :example => :environment do
       class JsSpecExampleBuilder < Lucky7::Builder
@@ -36,12 +43,8 @@ namespace :spec do
           :files => "#{Lucky7Root}/lib/jsspec/example.html.jass"
       end
       JsSpecExampleBuilder.new.build_all
-    end
 
-    task :build => :environment do
-      Dir.glob("#{Lucky7Root}/jspec/src/**/*.html.jass").each do |spec|
-        Lucky7::Builder.build_spec spec
-      end
+      Launchy::Browser.new.visit("file://#{Lucky7Root}/vendor/js_spec/example.html")
     end
   end
 end
