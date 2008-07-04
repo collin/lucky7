@@ -63,7 +63,11 @@ describe Should have's
     value_of([1,2,3]).should_have(4, "items");
   
   it Object\'s item length
-    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(3, "accounts");
+    value_of({
+      name:'Alan Kang'
+      ,email:'jania902@gmail.com'
+      ,accounts:['A', 'B']
+    }).should_have(3, "accounts");
   
   it No match
     value_of("This is a string").should_have(5, "players");
@@ -89,14 +93,22 @@ describe Should be empty's
     value_of([1,2,3]).should_be_empty();
   
   it Object\'s item
-    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(0, "accounts");
+    value_of({
+      name:'Alan Kang'
+      ,email:'jania902@gmail.com'
+      ,accounts:['A', 'B']
+    }).should_have(0, "accounts");
 
 describe Failure messages
   it Should be (String)
     value_of("Hello World").should_be("Good-bye world");
 
   it Should have (Object\s item)
-    value_of({name:'Alan Kang', email:'jania902@gmail.com', accounts:['A', 'B']}).should_have(3, "accounts");
+    value_of({
+      name:'Alan Kang'
+      ,email:'jania902@gmail.com'
+      ,accounts:['A', 'B']
+    }).should_have(3, "accounts");
 
   it Should have at least
     value_of([1,2,3]).should_have_at_least(4, "items");

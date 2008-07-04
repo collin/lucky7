@@ -2,14 +2,16 @@ require 'haml'
 
 module Jass
   class Precompiler < Fold::Precompiler
-    folds :Line, // 
+    folds :Line, // do
+      "\n#{(" "*Indent*tabs)+text}#{render_children}"
+    end
 
     folds :ExampleGroup, /^describe / do
       "describe(\"#{text}\", {\n  #{render_children.join('  ,')}});\n\n"
     end
 
     folds :Example,      /^it / do
-      "\"#{text}\": function() {\n  #{render_children}\n  }\n"
+      "\"#{text}\": function() {#{render_children.map{|child|"#{child}"}}\n  }\n"
     end
   end
   
