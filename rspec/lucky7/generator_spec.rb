@@ -58,6 +58,8 @@ describe Lucky7::Generator do
     before(:each) do
       @installer.skeleton('mine')
       @mine = @target + 'mine'
+      @vendor||= @mine + "vendor"
+      @jsspec||= @vendor + "jsspec"
     end
 
     it "generates root" do
@@ -78,6 +80,24 @@ describe Lucky7::Generator do
 
     it "generates environment.rb" do
       (@mine+"environment"+"environment.rb").should be_exist
+    end
+
+    it "generates vendor directory" do
+      @vendor.should be_exist
+    end
+    
+    it "generates jsspec directory" do
+      @jsspec.should be_exist
+    end
+  
+    def should_copy file
+      (@jsspec + file).should be_exist
+    end 
+
+    it "copies jsspec files to jsspec vendor dir" do
+      should_copy "diff_match_patch.js"
+      should_copy "JSSpec.js"
+      should_copy "JSSpec.css"
     end
   end
 

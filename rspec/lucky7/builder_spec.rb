@@ -19,7 +19,6 @@ describe modify_file! do
   end
 end
 
-
 describe Builder do
   it "inherits Class" do
     Builder.class.should == Class
