@@ -1,3 +1,6 @@
 class Lucky7::SpecBuilder < Lucky7::Builder
-  builds Jass, :files => "jspec/src/**/*.html.jass"
+  SrcRegex       = /\/jass/
+  BuildDirectory = ""
+
+  builds Jass, :files => "#{Lucky7Root}/jspec/jass/**/*.html.jass"
 end

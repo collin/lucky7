@@ -2,16 +2,43 @@ require 'haml'
 
 module Jass
   class Precompiler < Fold::Precompiler
+    include Johnson::Nodes
+    JsSpecRoot = Lucky7Root + "vendor" + "js_spec"
+
+    attr_reader :scripts
+  
+    def initialize
+      super
+      
+      @scripts = []
+      @scripts << JsSpecRoot + "diff_match_patch.js"
+      @scripts << JsSpecRoot + "JSSpec.js"
+    end
+
     folds :Line, // do
-      "\n#{(" "*Indent*tabs)+text}#{render_children}"
+      children.inject(text) do |script, child|
+        script += "#{child.text}#{child.render_children}"
+        script
+      end
     end
 
     folds :ExampleGroup, /^describe / do
-      "describe(\"#{text}\", {\n  #{render_children.join('  ,')}});\n\n"
+      call = FunctionCall.new(0,0)
+      call << Name.new(0,0, 'describe')
+      call << String.new(0,0, text)
+      call << ObjectLiteral.new(0,0, render_children)
+      call
     end
 
     folds :Example,      /^it / do
-      "\"#{text}\": function() {#{render_children.map{|child|"#{child}"}}\n  }\n"
+      js = render_children.join
+      
+      Property.new(0,0, String.new(0,0, text),
+        Function.new(0,0, nil, [], Johnson::Parser.parse(js)))
+    end
+
+    folds :Require,      /^require / do
+      @scripts << eval(text)
     end
   end
   
@@ -19,7 +46,15 @@ module Jass
     Layout= Haml::Engine.new File.read("#{Lucky7Root}/lib/jsspec/layout.html.haml")
     
     def render context=nil
-      Layout.render Object.new, {:test=>super}    
+      @p = precompiler.new
+      value = @p.fold(lines).children.map{|child| child.render}
+      sexp = Johnson::Nodes::SourceElements.new(0,0)
+      value.each{|line| sexp << line}
+
+      Layout.render Object.new, {
+        :test => sexp.to_ecma, 
+        :scripts => @p.scripts
+      }    
     end
   end
 end

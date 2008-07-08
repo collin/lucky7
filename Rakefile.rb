@@ -17,6 +17,7 @@ end
 namespace :spec do
   task :prepare => :environment do 
     @specs= Dir.glob("#{Lucky7Root}/rspec/**/*.rb").join(' ')
+    p @specs
   end
   
   task :all => :prepare do
@@ -27,13 +28,19 @@ namespace :spec do
     system "spec #{@specs} --format specdoc"
   end
 
-
   task :build => :environment do
     require 'tools/spec_builder'
     Lucky7::SpecBuilder.new.build_continuously
   end  
 
   namespace :js do
+    task :run => :environment do
+      browser = Launchy::Browser.new
+      Dir.glob("#{Lucky7Root}/jspec/**/*.html").each do |spec|
+        browser.visit spec 
+      end
+    end
+
     task :example => :environment do
       class JsSpecExampleBuilder < Lucky7::Builder
         SrcRegex= Regexp.new "lib/jsspec"
@@ -42,6 +49,7 @@ namespace :spec do
         builds Jass,
           :files => "#{Lucky7Root}/lib/jsspec/example.html.jass"
       end
+
       JsSpecExampleBuilder.new.build_all
 
       Launchy::Browser.new.visit("file://#{Lucky7Root}/vendor/js_spec/example.html")

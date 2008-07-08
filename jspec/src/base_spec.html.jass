@@ -1,3 +1,0 @@
-describe Base
-  it exists
-    1+1;
