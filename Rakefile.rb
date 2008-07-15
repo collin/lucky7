@@ -4,6 +4,8 @@ require 'rubygems'
 require 'spec'
 require 'launchy'
 
+task :default => "spec:all"
+
 desc "Watch files for changes and rebuild on the fly."
 task :build => :environment do
   require 'lib/lucky7/builder'
@@ -15,6 +17,8 @@ task :environment do
 end
 
 namespace :spec do
+  task :default => :all
+
   task :prepare => :environment do 
     @specs= Dir.glob("#{Lucky7Root}/rspec/**/*.rb").join(' ')
     p @specs
@@ -94,8 +98,17 @@ Gem::Specification.new do |s|
   s.add_dependency  "basis"
   s.add_dependency  "haml"
   #s.add_dependency "jabs"
-  #s.add_dependency "jass"
+  s.add_dependency "jass"
 end
 }
+  end
+end
+
+namespace :gen do
+  task :app => :environment do
+    app_name = ENV['Name']
+    raise "What name for your app?" unless app_name
+    generator = Lucky7::Generator.new(Lucky7Root + "apps")
+    generator.skeleton(app_name)
   end
 end

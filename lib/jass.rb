@@ -43,7 +43,8 @@ module Jass
   end
   
   class Engine < Fold::Engine
-    Layout= Haml::Engine.new File.read("#{Lucky7Root}/lib/jsspec/layout.html.haml")
+    template = Lucky7Root + "lib" + "jsspec" + "layout.html.haml"
+    Layout= Haml::Engine.new(template.read)
     
     def render context=nil
       @p = precompiler.new

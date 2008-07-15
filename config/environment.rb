@@ -9,6 +9,7 @@ require 'rubygems'
 require 'facets'
 require 'basis'
 require 'johnson'
+require 'sequel'
 
 require 'lib/lucky7'
 require 'fold'

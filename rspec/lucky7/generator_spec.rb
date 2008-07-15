@@ -10,20 +10,32 @@ describe Lucky7::Generator do
   end
 
   describe Lucky7::Generator::SkeletonPath do
-    it "is /skeleton" do
-      Lucky7::Generator::SkeletonPath.should == "#{Lucky7Root}/templates/skeleton"
+    it "is skeleton/" do
+      Lucky7::Generator::SkeletonPath.should == Lucky7Root + "templates" + "skeleton"
     end
   end
 
   describe Lucky7::Generator::EnvironmentPath do
-    it "is /environment" do
-      Lucky7::Generator::EnvironmentPath.should == "#{Lucky7Root}/templates/environment"
+    it "is environment/" do
+      Lucky7::Generator::EnvironmentPath.should == Lucky7Root + "templates" + "environment"
     end
   end
 
   describe Lucky7::Generator::TemplatePath do
-    it "is /templates" do
-      Lucky7::Generator::TemplatePath.should == "#{Lucky7Root}/templates"
+    it "is templates/" do
+      Lucky7::Generator::TemplatePath.should == Lucky7Root + "templates"
+    end
+  end
+
+  describe Lucky7::Generator::RubySpecPath do
+    it "is ruby_spec/" do
+      Lucky7::Generator::RubySpecPath.should == Lucky7Root + "templates" + "ruby_spec"
+    end
+  end
+
+  describe Lucky7::Generator::JavascriptSpecPath do
+    it "is javascript_spec/" do
+      Lucky7::Generator::JavascriptSpecPath.should == Lucky7Root + "templates" + "javascript_spec"
     end
   end
 
@@ -34,6 +46,11 @@ describe Lucky7::Generator do
     FileUtils.mkdir(@target)
 
     @installer = Lucky7::Generator.new(@target)
+
+    @mine  ||= @target + 'mine'
+    @vendor||= @mine + "vendor"
+    @jsspec||= @vendor + "jsspec"
+    @spec  ||= @mine + "spec"
   end 
 
   describe "#install_to_path" do
@@ -57,13 +74,14 @@ describe Lucky7::Generator do
   describe "#skeleton" do
     before(:each) do
       @installer.skeleton('mine')
-      @mine = @target + 'mine'
-      @vendor||= @mine + "vendor"
-      @jsspec||= @vendor + "jsspec"
     end
 
     it "generates root" do
       (@mine).should be_exist
+    end
+
+    it "generates .lucky7 file" do
+      (@mine + ".lucky7").should be_exist
     end
 
     it "generates rakefile" do
@@ -80,6 +98,22 @@ describe Lucky7::Generator do
 
     it "generates environment.rb" do
       (@mine+"environment"+"environment.rb").should be_exist
+    end
+
+    it "generates spec directory" do
+      @spec.should be_exist
+    end
+
+    it "generates javascript spec directory" do
+      (@spec + "javascript").should be_exist
+    end
+
+    it "generates ruby spec directory" do
+      (@spec + "ruby").should be_exist
+    end
+
+    it "generates ruby spec helper" do
+      (@spec + "ruby" + "spec_helper.rb").should be_exist
     end
 
     it "generates vendor directory" do
@@ -105,11 +139,33 @@ describe Lucky7::Generator do
     before(:each) do
       @installer.skeleton('mine')
       @installer.environment('development')
-      @env = @target + 'environment'
+      @env = @mine + 'environment'
     end
 
     it "generates an environment file" do
       (@env+"development.rb").should be_exist
+    end
+  end
+
+  describe "#javascript_spec" do
+    before(:each) do
+      @installer.skeleton('mine')
+      @installer.javascript_spec('module', 'tested')
+    end
+
+    it "generates jass file" do
+      (@spec + "javascript" + "jass" + "module" + "tested_spec.html.jass").should be_exist
+    end
+  end
+
+  describe "#ruby_spec" do
+    before(:each) do
+      @installer.skeleton('mine')
+      @installer.ruby_spec('module', 'tested')
+    end
+
+    it "generates spec file" do
+      (@spec + "ruby" + "module" + "tested_spec.rb").should be_exist
     end
   end
 end
