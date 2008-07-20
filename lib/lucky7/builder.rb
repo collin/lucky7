@@ -86,6 +86,8 @@ module Lucky7
         src = File.read(path)
         engine = builder::Engine.new(src)
 
+        cached_mtimes[path] = Time.now
+
         rendered = engine.render options[:context]
         file.write(rendered)
         file.close

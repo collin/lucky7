@@ -1,50 +1,48 @@
 require 'rspec/jabs_spec_helper'
 
-describe Jabs::Precompiler, ".defined_folds" do
-  it "defines Line" do
-    Jabs::Precompiler.defined_folds.should include(Jabs::Precompiler::Line)
+describe Jabs::Precompiler do
+  before(:each) do
+    @p = Jabs::Precompiler.new
   end
-  
-  it "defines Action" do
-    Jabs::Precompiler.defined_folds.should include(Jabs::Precompiler::Action)
+
+  describe "initializes sanely" do
+    it "has templates hash" do
+      @p.templates === {}
+    end
+
+    it "has actions hash" do
+      @p.actions === {}
+    end
+
+    it "has selectors hash" do
+      @p.selectors === {}
+    end
   end
-  
-  it "defines Selector" do
-    Jabs::Precompiler.defined_folds.should include(Jabs::Precompiler::Selector)
+
+  it "folds selectors" do
+    @p.fold(["?named div > a.whatever"]).render_children
+    @p.selectors["named"].should == "div > a.whatever"
+  end
+
+  it "folds actions" do
+    @p.fold(["!click one, two, three"]).render_children
+    @p.actions["click"].first[:selectors].should == %w{one two three}
+  end
+
+  it "folds multiple selectors for action" do
+    @p.fold(["!click one, two, three"]).render_children
+    @p.fold(["!click one, two, three"]).render_children
+    @p.actions["click"].length.should == 2
+  end
+
+  it "folds class" do
+    @p.fold(["class Klass"]).render_children
+    @p.klass.should == "Klass"
+  end
+
+  it "raises error if klass specified twice" do
+    proc {
+      @p.fold(["class Klass","class Klass"]).render_children
+    }.should raise_error
   end
 end
-
-describe Jabs::Precompiler, ".produce" do
-  before(:each) {@it= Jabs::Precompiler.new}
-  
-  it "produces Lines" do
-    @it.produce('LINE').is_a?(Jabs::Precompiler::Line).should == true
-  end
-  
-  it "produces Actions" do
-    @it.produce('!LINE').is_a?(Jabs::Precompiler::Action).should == true
-  end
-  
-  it "produces Selectors" do
-    @it.produce('?LINE').is_a?(Jabs::Precompiler::Selector).should == true
-  end
-end
-
-describe Jabs::Precompiler::Line::Regex do
-  it "should match anything" do
-    Jabs::Precompiler::Line::Regex.should match('anything')
-  end
-end
-
-describe Jabs::Precompiler::Action::Regex do
-  it "should match !actions" do
-    Jabs::Precompiler::Action::Regex.should match("!actions")
-  end
-end
-
-describe Jabs::Precompiler::Selector::Regex do
-  it "should match ?selectors" do
-    Jabs::Precompiler::Selector::Regex.should match("?selectors")
-  end
-end
-
