@@ -1,6 +1,13 @@
 require 'haml'
+require 'johnson'
+require 'pathname'
+
+__DIR__ = Pathname.new(__FILE__).dirname
+$LOAD_PATH << __DIR__ unless $LOAD_PATH.include?(__DIR__)
 
 module Jabs
+  include Johnson::Nodes
+
   class Precompiler < Fold::Precompiler
     attr_accessor :klass, :souper, :templates, :selectors, :actions
 
@@ -50,7 +57,6 @@ module Jabs
   end
   
   class Engine < Fold::Engine
-    include Johnson::Nodes
 
     def render
       @p = precompiler_class.new

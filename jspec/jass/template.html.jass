@@ -1,5 +1,6 @@
 require "#{Lucky7Root}/lib/lucky7.js"
 require "#{Lucky7Root}/lib/lucky7/template.js"
+require "#{Lucky7Root}/lib/lucky7/resource.js"
 
 describe simple Lucky7.Template 
   it before
@@ -45,6 +46,10 @@ describe referencing Lucky7.Template
     Lucky7.Template('play', "play #{game}");
     Lucky7.Template('to', "#{verb} to: ={nouns}");
     Lucky7.Template('nouns', "\n #{name}");
+
+  it renders dom fragment
+    var out = Lucky7.Template('linking').toFragment({name:'collin', activity: 'play', game: 'checkers'});
+    value_of(out.nodeType).should_not_be_undefined();
    
   it passes self to 'play' template
     var out = Lucky7.Template('linking').render({name:'collin', activity: 'play', game: 'checkers'});
@@ -61,3 +66,10 @@ describe referencing Lucky7.Template
       ]
     });
     value_of(out).should_be('joyce wants to walk to: \n town\n school')
+
+describe binding to resources
+  it updates on after update
+    var resource = Lucky7.Resource('test').post({noun: 'cat', verb: 'dance'});
+    var frag = Lucky7.Template('cats').bindToResource(resource);
+    resource.put({verb:'sing and dance'});
+    value_of(jQuery(frag).html()).should_match('sing and dance');

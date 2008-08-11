@@ -1,5 +1,5 @@
 module Lucky7
-  require 'lib/lucky7/renders'
-  require 'lib/lucky7/builder'
-  require 'lib/lucky7/generator'
+  require 'lucky7/renders'
+  require 'lucky7/builder'
+  require 'lucky7/generator'
 end
