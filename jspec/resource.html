@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <title>Generated Test</title>
+    <meta content='text/html; charset=utf-8' http-equiv='content-type' />
+    <link href='/home/collin/code/lucky7/vendor/js_spec/JSSpec.css' rel='stylesheet' type='text/css' />
+    <script src='/home/collin/code/lucky7/vendor/js_spec/diff_match_patch.js' type='text/javascript'>    </script>
+    <script src='/home/collin/code/lucky7/vendor/js_spec/JSSpec.js' type='text/javascript'>    </script>
+    <script src='/home/collin/code/lucky7/vendor/jquery/jquery-1.2.6.js' type='text/javascript'>    </script>
+    <script src='/home/collin/code/lucky7/lib/lucky7.js' type='text/javascript'>    </script>
+    <script src='/home/collin/code/lucky7/lib/lucky7/resource.js' type='text/javascript'>    </script>
+  </head>
+  <body>
+    <script type='text/javascript'>
+      //<![CDATA[
+        describe("Lucky7.Resource", { "before": function() {
+            L7R = Lucky7.Resource;
+            Lucky7.resources = {  };
+            r = L7R("thing");
+            thing = r.post({ name: "widget" });
+        },
+          "gets resources by id": function() {
+            value_of(r.get(thing.data.id)).should_not_be_null();
+        },
+          "sets values from post": function() {
+            value_of(thing.data.name).should_be("widget");
+        },
+          "assigns ids to instances": function() {
+            value_of(thing.data.id).should_not_be(null);
+        },
+          "updates values from put": function() {
+            thing.put({ name: "fringe" });
+            value_of(thing.data.name).should_be("fringe");
+        },
+          "removes id when deleted": function() {
+            thing.delete();
+            value_of(thing.data.id).should_be_undefined();
+        },
+          "will not get deleted": function() {
+            var id = thing.data.id;
+            thing.delete();
+            value_of(r.get(id)).should_be_undefined();
+        },
+          "advice lifecycle before get": function() {  },
+          "advice lifecycle after get": function() {
+            var id = thing.data.id, found = false;
+            r.after("get", function(id) {
+              found = true;
+        });
+            r.get(id);
+            value_of(found).should_be_true();
+        },
+          "advice lifecycle before post": function() {
+            var id;
+            r.before("post", function(data) {
+              id = id;
+        });
+            r.post({  });
+            value_of(id).should_be_undefined();
+        },
+          "advice lifecycle after post": function() {
+            var id;
+            r.after("post", function() {
+              id = this.data.id;
+        });
+            r.post({  });
+            value_of(id).should_not_be_undefined();
+        },
+          "advice lifecycle before put": function() {
+            var name;
+            r.before("put", function(data) {
+              name = this.data.name;
+        });
+            thing.put({ name: "not widget" });
+            value_of(name).should_be("widget");
+        },
+          "advice lifecycle after put": function() {
+            var name;
+            r.after("put", function() {
+              name = this.data.name;
+        });
+            thing.put({ name: "not widget" });
+            value_of(name).should_be("not widget");
+        },
+          "advice lifecycle before delete": function() {
+            var id;
+            r.before("delete", function() {
+              id = this.data.id;
+        });
+            thing.delete();
+            value_of(id).should_not_be_undefined();
+        },
+          "advice lifecycle after delete": function() {
+            var id;
+            r.after("delete", function() {
+              id = this.id;
+        });
+            thing.delete();
+            value_of(id).should_be_undefined();
+        } });
+      //]]>
+    </script>
+  </body>
+</html>
