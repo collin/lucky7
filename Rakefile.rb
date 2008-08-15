@@ -1,8 +1,10 @@
-__DIR__ = path = File.dirname(__FILE__)
-
 require 'rubygems'
+require 'pathname'
 require 'spec'
 require 'launchy'
+
+__DIR__ = path = Pathname.new(__FILE__).dirname.expand_path
+
 
 task :default => "spec:all"
 

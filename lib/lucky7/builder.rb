@@ -83,19 +83,25 @@ module Lucky7
       for path in paths
         file = File.new build_path_for(path), 'w'
 
-        src = File.read(path)
-        engine = builder::Engine.new(src)
-
-        cached_mtimes[path] = Time.now
-
-        rendered = engine.render options[:context]
-        file.write(rendered)
-        file.close
+        p "building: #{path}"
+        p "as:       #{file.path}"
+        p ""
+        
+        begin
+          src = File.read(path)
+          engine = builder::Engine.new(src)
+  
+          cached_mtimes[path] = Time.now
+  
+          rendered = engine.render options[:context]
+          file.write(rendered)
+          file.close
+        rescue Exception => e
+          puts "failed to build because:"
+          puts e.inspect
+          puts ""
+        end
       end
-    end
-
-    def pack
-
     end
     
     def ensure_build_path! path
