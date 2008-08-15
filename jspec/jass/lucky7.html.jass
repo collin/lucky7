@@ -1,5 +1,0 @@
-require "#{Lucky7Root}/lib/lucky7.js"
-
-describe Lucky7
-  it provides a namespace
-    value_of(Lucky7.constructor).should_be(Object);

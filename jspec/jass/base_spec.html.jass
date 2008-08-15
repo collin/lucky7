@@ -1,9 +1,0 @@
-require #{Lucky7Root}/vendor/js_spec/diff_match_patch.js
-require #{Lucky7Root}/vendor/js_spec/JSSpec.js
-require #{jQuery}
-require #{OrbitedRoot}/WebSocket.js
-
-describe Base
-  it exists
-    1+1;
-    23+
