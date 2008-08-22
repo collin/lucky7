@@ -1,0 +1,211 @@
+.compositions 
+  %input{:type=>:text, :name=>:query, :default_value=>'cssQuery'}
+  %ol
+    %li
+      %button.destroy
+      %button.drag
+      %button.toggle
+      Resources
+      %ol
+        %li
+          %button.destroy
+          %button.drag
+          %button.toggle
+          .element
+            %label div
+            %ul
+              %li
+                %span.key class
+                %span.value resources
+          %ol
+            %li
+              %button.destroy
+              %button.drag
+              %button.toggle
+              .element
+                %label ul
+              %ol
+                %li
+                  %button.destroy
+                  %button.drag
+                  %button.toggle
+                  .element
+                    %label h1
+                  %ol
+                    %li.empty
+                      %button.destroy
+                      %button.drag
+                      %button.toggle
+                      Resources
+                %li
+                  %button.destroy
+                  %button.drag
+                  %button.toggle
+                  .code
+                    .for_in
+                      .name resource
+                      .dot_accessor
+                        .constant Resources
+                        .name all
+                  %ol
+                    %li
+                      %button.destroy
+                      %button.drag
+                      %button.toggle
+                      .element
+                        %label li
+                      %ol
+                        %li.empty
+                          %button.destroy
+                          %button.drag
+                          %button.toggle
+                          .code.render
+                            .dot_accessor
+                              .name resource
+                              .name name
+  %ol
+    %li.closed
+      %button.toggle
+      Current Resource
+      %ol
+        %li
+          %button
+          ==.current_resource
+          %ol
+            %li
+              %button
+              ==%ul.columns
+              %ol
+                %li
+                  %button
+                  ==%button.add
+                  %ol
+                    %li.empty
+                      %button 
+                      ==%img{:src=>"/icons/add.png"}
+                    %li.empty
+                      %button 
+                      Add a Column!
+                %li.empty
+                  %button
+                  ==%h1 Columns!
+.styles
+  %dl
+    %button.add
+      %img{:src=>"/icons/add.png"}
+      %span Add a Style!
+    %label element.style
+    %li
+      %button.destroy
+      %button.drag
+      %button.block
+      %dt background-color
+      %dd white
+    %li
+      %button.destroy
+      %button.drag
+      %button.block
+      %dt text-decoration
+      %dd none
+
+  %ul
+    %button.add
+      %img{:src=>"/icons/add.png"}
+      %span Add a Named Visual State!
+    %li
+      %dl
+        %button.add
+          %img{:src=>"/icons/add.png"}
+          %span Add a Style!
+        %button.eye
+        %label state1
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt background-color
+          %dd white
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt text-decoration
+          %dd none
+    %li
+      %dl
+        %button.add
+          %img{:src=>"/icons/add.png"}
+          %span Add a Style!
+        %button.eye
+        %label state3
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt background-color
+          %dd white
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt text-decoration
+          %dd none
+    %li
+      %dl
+        %button.add
+          %img{:src=>"/icons/add.png"}
+          %span Add a Style!
+        %button.eye
+        %label state2
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt background-color
+          %dd white
+        %li
+          %button.destroy
+          %button.drag
+          %button.block
+          %dt text-decoration
+          %dd none
+
+  .dimensions
+    %label state1
+    .margin
+      %label margin
+      %span.top 0
+      %span.right 0
+      %span.bottom 0
+      %span.left 0
+      .border
+        %label border
+        %span.top 0
+        %span.right 0
+        %span.bottom 0
+        %span.left 0
+        .padding
+          %label padding
+          %span.top 0
+          %span.right 0
+          %span.bottom 0
+          %span.left 0
+          .content
+            %label content
+            %span.width 0
+            %span.by x
+            %span.height 0
+
+.canvas
+  .body
+    .resources
+    %ul
+      %h1 Resources
+      %li Things
+      %li Tags
+
+  .tools
+    %select
+      %option div
+    %button
+      %img{:src=>"/icons/add.png"}

@@ -1,0 +1,102 @@
+.resources
+  %ul
+    %h1 Resources
+    %li Things
+    %li Tags
+  
+.current_resource
+  %ol.columns 
+    %button.add
+      %img{:src=>"/icons/add.png"}
+      Add a Column!
+    %h1 Columns
+    %form{:action=>"/column"}
+      %fieldset
+        %legend Add a Column...
+        %ul
+          %li
+            %label name
+            %input{:type=>"text", :default_value=>"name..."}
+          %li
+            %label required
+            %input{:type=>"checkbox"}
+        %div
+          %button{:type=>"submit", :commit=>"create"}
+            %img{:src=>"/icons/accept.png"}
+            Create!
+          %button{:type=>"submit", :commit=>"cancel"}
+            %img{:src=>"/icons/cross.png"}
+            Forget it
+    %li
+      /%button.edit 
+      /%img{:src=>"/icons/application_edit.png"}
+      /Edit
+      %form{:action=>"/column/:id", :method=>:put}
+        %fieldset
+          %legend These must be specified for this column...
+          %label type
+          %select
+            %option{:value =>"text"} Text
+          %div
+            %button{:type=>"submit", :commit=>"update"}
+              %img{:src=>"/icons/accept.png"}
+              Done!
+            %button{:type=>"submit", :commit=>"cancel"}
+              %img{:src=>"/icons/cross.png"}
+              Remove Column
+      %dl
+        %li
+          %dt name
+          %dd Description
+        %li
+          %dt required
+          %dd true
+    
+    %li
+      %button.remove Remove
+      %button.edit
+        %img{:src=>"/icons/application_edit.png"}
+        Edit
+      %dl
+        %li
+          %dt name
+          %dd Due On
+        %li
+          %dt type
+          %dd datetime        
+
+  %ul.relationships
+    %button.add
+      %img{:src=>"/icons/add.png"}
+      Add a Relationship!
+    %h1 Relationships
+    %li
+      %button.remove Remove
+      %button.edit
+        %img{:src=>"/icons/application_edit.png"}
+        Edit
+      %dl 
+        %li
+          %dt name
+          %dd tags
+        %li
+          %dt type
+          %dd has_many
+        %li
+          %dt resource_id
+          %dd #UUID
+    %li
+      %button.remove Remove
+      %button.edit
+        %img{:src=>"/icons/application_edit.png"}
+        Edit
+      %dl
+        %li
+          %dt name
+          %dd doers
+        %li
+          %dt type
+          %dd has_many
+        %li
+          %dt resource_id
+          %dd #UUID

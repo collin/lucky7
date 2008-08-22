@@ -1,0 +1,106 @@
+!left_column = 200px
+!key_column = 100px
+!right_column = !left_column
+
+//@import colors.sass
+!positive = white 
+!light = #f9f9f9
+
+=key
+  :background-color= !positive
+  :padding 4px
+  :float left
+  :width= !key_column
+
+=text_input
+  :border 2px outset
+  :background= !positive
+
+=value
+  :clear right
+    :display inline
+  &:hover
+    +text_input
+    :position relative
+    :left -2px
+
+=cleared_list
+  li
+    :clear both
+    &:first-child
+      :clear none
+
+=famfamfam
+  :text-indent -10000px
+  :width 20px
+  :height 20px
+
+.resources
+  :float left
+  :wdith= !left_column
+  :margin-top 0
+
+  ul
+    :text-align right
+
+/Omg Icons
+button.remove
+  +famfamfam
+  &.remove
+    :background-image url(/icons/cross.png)
+
+button
+  :background-color transparent
+  :border-color transparent
+  &:hover
+    :border-color black
+
+.current_resource
+  :margin-left= !left_column
+  :margin-right= !right_column
+
+  .columns, .relationships
+    .add
+      :float right
+    li
+      :background-color= !light
+      
+      dl
+        +cleared_list
+        :margin 10px 0
+        :padding 10px
+          :bottom 20px
+        li
+          :width auto
+          :border-bottom 1px dotted
+        dt
+          +key
+        dd
+          +value
+    
+      button
+        :float right
+      form
+        button
+          :float none
+
+input
+  +text_input
+
+form
+  +cleared_list
+  :margin-bottom 10px
+  :border 5px solid
+    :color=  !light - #333
+  :background-color= !light
+  legend
+    :padding 10px
+    :background-color= !positive
+    :font-size 1.2em
+  fieldset
+    :border none
+  label
+    +key
+  div
+    :clear both
+    

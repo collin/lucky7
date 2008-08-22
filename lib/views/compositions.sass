@@ -1,0 +1,329 @@
+!compositions_width= 300px
+!styles_width= 300px
+!key_column = 100px
+!tools_height = 40px
+
+//@import colors.sass
+!positive = white 
+!light = #f9f9f9
+
+=cleared_list
+  li
+    :clear both
+    &:first-child
+      :clear none
+
+=key
+  :background-color= !positive
+  :padding 4px
+  :float left
+  :width= !key_column
+
+=text_input
+  :border 2px outset
+  :background= !positive
+
+=value
+  :clear right
+  :display inline
+  &:hover
+    +text_input
+    :position relative
+    :left -2px
+
+=famfamfam
+  :text-indent -10000px
+  :width 20px
+  :height 20px
+  :border-color transparent
+  :position relative
+  :top -4px
+  :background
+    :color transparent
+    :repeat no-repeat
+    :position center
+  &:hover
+    :border-color black
+
+html, body
+  :width 100%
+  :height 100%
+  :overflow hidden
+  :margin 0
+  :padding 0
+
+.compositions
+  :float left
+  :width= !compositions_width
+  :white-space nowrap
+  :overflow auto
+  :height 100%
+  :font
+    :size 0.8em
+    :family sans-serif
+  &> ol
+    :margin-left -16px
+  &> input
+    :width= !compositions_width
+  li
+    :clear both
+    :padding-left 16px
+    &:hover
+      :background-color= !light
+    &.closed
+      button.toggle
+        :background-image url(/icons/open.png)
+      ol
+        :display none
+    &.empty
+      button.toggle
+        :background-image none
+    
+    &>div.element
+      :display inline
+      &:before
+        :content "<"
+        :margin-right -.3em
+      &:after
+        :content ">"
+      label
+        :display inline
+        :color red
+      ul, li
+        :margin 0
+        :padding 0
+        :display inline
+      .key
+        :color green
+        &:after
+          :color black
+          :content "="
+      .value
+        :color blue
+        :margin-left -0.5em
+        &:after
+          :content "\""
+          :color black
+        &:before
+          :content "\""
+          :color black
+    .code, .dot_accessor, .name, .for_in, .constant
+      :display inline
+    .code:before
+      :font-weight bold
+      :content "-"
+    .code.render:before
+      :font-weight normal
+      :content "="
+    .dot_accessor :first-child:after
+      :content "."
+      :color black
+      :margin-right -.2em
+    .dot_accessor 
+      &> :first-child
+        :font-weight bold
+      &> :last-child
+        :color green
+    .for_in
+      &> .name:first-child
+        :font-weight bold
+        &:before
+          :content "for "
+          :color blue
+          :font-weight bold
+      &> :last-child:before
+        :color blue
+        :font-weight bold
+        :content " in "
+    .constant
+      :color red
+
+    button
+      :position relative
+      :top -4px
+      :display inline
+      :width 16px
+      :height 16px
+      :margin 0
+      :padding 0
+      :border 0
+      :background
+        :color transparent
+        :repeat no-repeat
+
+.canvas
+  :margin-left= !compositions_width
+  :margin-right= !styles_width
+  :margin-bottom= !tools_height
+  :position absolute
+  :top 0px
+  :bottom 0px
+  :right 0px
+  :left 0px
+  :background-image url(/images/tile.png)
+
+  .tools
+    :height= !tools_height
+    :position fixed
+    :bottom 0px
+
+!margin_size= 85%
+!border_size= 80%
+!padding_size= 75%
+!content_size= 70%
+
+li
+  button.block, button.destroy, button.drag
+    :border none
+    :display inline
+    :position relative
+    :top 2px
+    :float left
+    :width 12px
+    :height 12px
+    :background none
+  button.destroy
+    :margin-right 10px
+  button.block
+    :margin-right 10px
+  &:hover
+    &> button.toggle
+      :background-image url(/icons/close.png)
+    &> button.block
+      :background
+        :color transparent
+        :image url(/icons/block.png) 
+    &> button.destroy
+      :background
+        :color transparent
+        :image url(/icons/small_cross.png)
+    &> button.drag
+      :cursor move
+      :background
+        :color transparent
+        :image url(/icons/drag_handle.gif)
+  
+.styles
+  :width= !styles_width
+  :float right
+  +cleared_list
+  li
+
+  button
+    :background-color transparent
+    :border-color transparent
+    :font-size 0.8em
+    &.add
+      :display block
+      :float right
+      :visibility hidden
+      &:hover
+        :cursor pointer
+        span
+          :text-decoration underline
+  dl
+    :font
+      :size 0.8em
+      :family sans-serif
+    :margin-left 10px
+    img
+      :position relative
+      :top 4px
+    label
+      :color red
+      &:after
+        :color black
+        :content "{"
+        :margin-left 5px
+    &:after
+      :content "}"
+    &:hover
+      .add
+        :visibility visible
+  dt
+    :float left
+    :color green
+    &:after
+      :content ":"
+      :margin-right 5px
+  dd
+    :color blue
+    &:after
+      :content ";"
+
+  ul 
+    &> li
+      :margin-bottom 10px
+    label:before
+      :content "."
+    &:hover
+      &> .add
+        :visibility visible
+      
+button.eye
+  +famfamfam
+  :background-image url(/icons/eye.png)
+
+.dimensions
+  :font
+    :size 0.7em
+    :family sans-serif
+  :padding 1px
+  :width 90%
+  :height= !styles_width * 0.9
+  :position relative
+  span
+    :position absolute  
+  div
+    :margin 0px auto
+    :position relative
+    :border 1px inset
+    :text-align center
+    :background-color= !positive
+    &:hover
+      :background-color= !light
+  .left
+    :top= 50%
+    :left 3px
+  .right
+    :top= 50%
+    :right 3px
+  .bottom
+    :bottom 0px
+  .height
+    :top 50%
+    :left 65%
+  .width
+    :top 50%
+    :right 65%
+  .by
+    :top 50%
+    :left 50%
+  &>label
+    :color red
+    :margin-left 5%
+    &:before
+      :content "."
+  label
+    :position absolute
+    :left 0px
+    :top 0px
+    :background-color white
+    :padding 2px
+  .margin
+    :width= !margin_size
+    :height= !margin_size
+    :margin-top= (100% - !margin_size) / 2
+  .border
+    :width= !border_size
+    :height= !border_size
+    :margin-top= (100% - !border_size) / 2
+  .padding
+    :width= !padding_size
+    :height= !padding_size
+    :margin-top= (100% - !padding_size) / 2
+  .content
+    :width= !content_size
+    :height= !content_size
+    :margin-top= (100% - !content_size) / 2
+
